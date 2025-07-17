@@ -24,11 +24,13 @@ var uCases = []struct {
 func TestReservation(t *testing.T) {
 	for _, uCase := range uCases {
 		fakeEmailProvider := providers.NewFakeEmailProvider()
+		fakeReservationRepo := repositories.NewFakeReservationRepo()
 		fakePinGenerator := providers.NewFakePinGenerator()
 		fakePinGenerator.ExpectedPin = uCase.expectedPin
-		fakeReservationRepo := repositories.NewFakeReservationRepo()
+		fakeUuidGenerator := providers.NewFakeUuidGenerator()
+		fakeUuidGenerator.ExpectedUuid = "1"
 
-		reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo)
+		reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
 		confirmation, err := reservationUC.ReservationUseCase(uCase.reservationRequest)
 
 		assert.Nil(t, err)
@@ -48,16 +50,20 @@ func TestReservation(t *testing.T) {
 }
 
 func TestRepoError(t *testing.T) {
-	for _, uCase := range uCases {
-		fakeEmailProvider := providers.NewFakeEmailProvider()
-		fakePinGenerator := providers.NewFakePinGenerator()
-		fakePinGenerator.ExpectedPin = uCase.expectedPin
-		fakeReservationRepo := repositories.NewFakeReservationRepo()
-		fakeReservationRepo.ShouldReturnError = true
+	fakeEmailProvider := providers.NewFakeEmailProvider()
+	fakePinGenerator := providers.NewFakePinGenerator()
+	fakeReservationRepo := repositories.NewFakeReservationRepo()
+	fakeReservationRepo.ShouldReturnError = true
+	fakeUuidGenerator := providers.NewFakeUuidGenerator()
+	fakeUuidGenerator.ExpectedUuid = "112"
 
-		reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo)
-		_, err := reservationUC.ReservationUseCase(uCase.reservationRequest)
-
-		assert.Error(t, err, fmt.Errorf("error trying to save the reservation : %s", uCase.expectedReservationId))
+	reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
+	reservationRequest := ReservationRequest{
+		reservationDate: time.Now(),
+		reservationTime: 45,
+		email:           "johnDoe@email.com",
 	}
+	_, err := reservationUC.ReservationUseCase(reservationRequest)
+
+	assert.Error(t, err, fmt.Errorf("error trying to save the reservation : %s", "1"))
 }
