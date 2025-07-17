@@ -16,10 +16,10 @@ func NewFakeEmailProvider() *FakeEmailProvider {
 
 func (fer *FakeEmailProvider) Send(reservationConfirmation models.Reservation) error {
 	if fer.ShouldSendError {
-		return fmt.Errorf("error trying to send email : %s", reservationConfirmation.ReservationId)
+		return fmt.Errorf("error trying to send email : %s", reservationConfirmation.Id)
 	}
 	fer.Sent = []string{
-		reservationConfirmation.ReservationId,
+		reservationConfirmation.Id,
 	}
 	return nil
 }

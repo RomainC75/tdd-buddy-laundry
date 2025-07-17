@@ -16,7 +16,7 @@ func NewFakeReservationRepo() *FakeReservationRepo {
 
 func (frr *FakeReservationRepo) Save(reservation models.Reservation) error {
 	if frr.ShouldReturnError {
-		return fmt.Errorf("error trying to save the reservation : %s", reservation.ReservationId)
+		return fmt.Errorf("error trying to save the reservation : %s", reservation.Id)
 	}
 	frr.Reservations = append(frr.Reservations, reservation)
 	return nil

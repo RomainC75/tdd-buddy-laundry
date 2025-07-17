@@ -12,9 +12,9 @@ import (
 )
 
 var uCases = []struct {
-	reservationRequest    ReservationRequest
-	expectedPin           string
-	expectedReservationId string
+	reservationRequest ReservationRequest
+	expectedPin        string
+	expectedId         string
 }{
 	{
 		ReservationRequest{time.Now(), 45, "john.doe@email.com"}, "2345", "1",
@@ -39,7 +39,7 @@ func TestReservation(t *testing.T) {
 			ReservationDate: uCase.reservationRequest.reservationDate,
 			Email:           uCase.reservationRequest.email,
 			Pin:             uCase.expectedPin,
-			ReservationId:   "1",
+			Id:              "1",
 		}
 		assert.Equal(t, confirmation, expectedReservation)
 		assert.Equal(t, len(fakeReservationRepo.Reservations), 1)

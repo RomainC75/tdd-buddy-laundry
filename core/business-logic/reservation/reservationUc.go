@@ -34,7 +34,7 @@ func (rus *ReservationUC) ReservationUseCase(reservationRequest ReservationReque
 		ReservationDate: reservationRequest.reservationDate,
 		Email:           reservationRequest.email,
 		Pin:             rus.pinGenerator.Generate(),
-		ReservationId:   rus.uuidGenerator.Generate(),
+		Id:              rus.uuidGenerator.Generate(),
 	}
 	err := rus.reservationRepo.Save(reservation)
 	if err != nil {
