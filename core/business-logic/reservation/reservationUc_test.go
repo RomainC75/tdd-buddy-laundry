@@ -65,5 +65,5 @@ func TestRepoError(t *testing.T) {
 	}
 	_, err := reservationUC.ReservationUseCase(reservationRequest)
 
-	assert.Error(t, err, fmt.Errorf("error trying to save the reservation : %s", "1"))
+	assert.EqualError(t, err, fmt.Sprintf("error trying to save the reservation : %s", "112"))
 }
