@@ -67,3 +67,22 @@ func TestRepoError(t *testing.T) {
 
 	assert.EqualError(t, err, fmt.Sprintf("error trying to save the reservation : %s", "112"))
 }
+
+func TestEmailError(t *testing.T) {
+	fakeEmailProvider := providers.NewFakeEmailProvider()
+	fakeEmailProvider.ShouldSendError = true
+	fakePinGenerator := providers.NewFakePinGenerator()
+	fakeReservationRepo := repositories.NewFakeReservationRepo()
+	fakeUuidGenerator := providers.NewFakeUuidGenerator()
+	fakeUuidGenerator.ExpectedUuid = "112"
+
+	reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
+	reservationRequest := ReservationRequest{
+		reservationDate: time.Now(),
+		reservationTime: 45,
+		email:           "johnDoe@email.com",
+	}
+	_, err := reservationUC.ReservationUseCase(reservationRequest)
+
+	assert.EqualError(t, err, fmt.Sprintf("error trying to send email : %s", "112"))
+}
