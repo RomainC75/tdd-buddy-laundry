@@ -5,5 +5,5 @@ import (
 )
 
 type IEmail interface {
-	send(reservationConfirmation models.Reservation) error
+	Send(reservationConfirmation models.Reservation) error
 }

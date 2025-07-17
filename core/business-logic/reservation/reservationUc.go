@@ -13,25 +13,28 @@ type ReservationRequest struct {
 }
 
 type ReservationUC struct {
-	emailRepo *gateways.IEmail
+	emailRepo    gateways.IEmail
+	pinGenerator gateways.IPinGenerator
 }
 
-func NewReservationUC(emailRepo *gateways.IEmail) *ReservationUC {
+func NewReservationUC(emailProvider gateways.IEmail, pinGenerator gateways.IPinGenerator) *ReservationUC {
 	return &ReservationUC{
-		emailRepo: emailRepo,
+		emailRepo:    emailProvider,
+		pinGenerator: pinGenerator,
 	}
 }
 
 func (rus *ReservationUC) ReservationUseCase(reservationRequest ReservationRequest) (models.Reservation, error) {
 	// need to be calculated
-	newPin := "1234"
 	newReservationId := "1"
-
-	return models.Reservation{
+	reservation := models.Reservation{
 		ReservationTime: reservationRequest.reservationTime,
 		ReservationDate: reservationRequest.reservationDate,
 		Email:           reservationRequest.email,
-		Pin:             newPin,
+		Pin:             rus.pinGenerator.Generate(),
 		ReservationId:   newReservationId,
-	}, nil
+	}
+	rus.emailRepo.Send(reservation)
+
+	return reservation, nil
 }
