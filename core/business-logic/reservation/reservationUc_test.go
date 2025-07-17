@@ -40,6 +40,8 @@ func TestReservation(t *testing.T) {
 			Email:           uCase.reservationRequest.email,
 			Pin:             uCase.expectedPin,
 			Id:              "1",
+			// random parameter
+			MachineNum: confirmation.MachineNum,
 		}
 		assert.Equal(t, confirmation, expectedReservation)
 		assert.Equal(t, len(fakeReservationRepo.Reservations), 1)

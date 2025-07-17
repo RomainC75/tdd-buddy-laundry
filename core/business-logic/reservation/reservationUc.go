@@ -3,8 +3,16 @@ package reservation
 import (
 	"laundry/core/business-logic/models"
 	"laundry/core/gateways"
+	"laundry/helper"
 	"time"
 )
+
+var machines = []string{
+	"a1",
+	"a2",
+	"b1",
+	"bA",
+}
 
 type ReservationRequest struct {
 	reservationDate time.Time
@@ -35,6 +43,7 @@ func (rus *ReservationUC) ReservationUseCase(reservationRequest ReservationReque
 		Email:           reservationRequest.email,
 		Pin:             rus.pinGenerator.Generate(),
 		Id:              rus.uuidGenerator.Generate(),
+		MachineNum:      helper.GetRandomInArray[string](machines),
 	}
 	err := rus.reservationRepo.Save(reservation)
 	if err != nil {

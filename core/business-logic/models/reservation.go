@@ -8,4 +8,5 @@ type Reservation struct {
 	ReservationTime int
 	Email           string
 	Pin             string
+	MachineNum      string
 }

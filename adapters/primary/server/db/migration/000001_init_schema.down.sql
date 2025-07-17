@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS list_item;
+DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS lists;
+DROP TABLE IF EXISTS users;
+
+-- DROP TABLE IF EXISTS schema_migrations;
