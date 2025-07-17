@@ -1,6 +1,7 @@
 package reservation
 
 import (
+	"laundry/core/business-logic/models"
 	"testing"
 	"time"
 
@@ -8,19 +9,21 @@ import (
 )
 
 func TestReservation(t *testing.T) {
-	request := reservationRequest{
+	request := ReservationRequest{
 		reservationDate: time.Now(),
 		reservationTime: 45,
 		email:           "john.doe@email.com",
 	}
 
-	reservationUseCase := &reservationUC{}
+	reservationUseCase := &ReservationUC{}
 	confirmation, err := reservationUseCase.ReservationUseCase(request)
 	assert.Nil(t, err)
 
-	assert.Equal(t, confirmation, reservationConfirmation{
-		reservationRequest: request,
-		pin:                "1234",
-		reservationId:      "1",
+	assert.Equal(t, confirmation, models.Reservation{
+		ReservationTime: request.reservationTime,
+		ReservationDate: request.reservationDate,
+		Email:           request.email,
+		Pin:             "1234",
+		ReservationId:   "1",
 	})
 }
