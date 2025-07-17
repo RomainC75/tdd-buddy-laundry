@@ -13,14 +13,16 @@ type ReservationRequest struct {
 }
 
 type ReservationUC struct {
-	emailRepo    gateways.IEmail
-	pinGenerator gateways.IPinGenerator
+	emailRepo       gateways.IEmail
+	pinGenerator    gateways.IPinGenerator
+	reservationRepo gateways.IReservationRepo
 }
 
-func NewReservationUC(emailProvider gateways.IEmail, pinGenerator gateways.IPinGenerator) *ReservationUC {
+func NewReservationUC(emailProvider gateways.IEmail, pinGenerator gateways.IPinGenerator, reservationRepo gateways.IReservationRepo) *ReservationUC {
 	return &ReservationUC{
-		emailRepo:    emailProvider,
-		pinGenerator: pinGenerator,
+		emailRepo:       emailProvider,
+		pinGenerator:    pinGenerator,
+		reservationRepo: reservationRepo,
 	}
 }
 
@@ -34,7 +36,13 @@ func (rus *ReservationUC) ReservationUseCase(reservationRequest ReservationReque
 		Pin:             rus.pinGenerator.Generate(),
 		ReservationId:   newReservationId,
 	}
-	rus.emailRepo.Send(reservation)
-
+	err := rus.reservationRepo.Save(reservation)
+	if err != nil {
+		return models.Reservation{}, err
+	}
+	err = rus.emailRepo.Send(reservation)
+	if err != nil {
+		return models.Reservation{}, err
+	}
 	return reservation, nil
 }
