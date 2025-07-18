@@ -10,4 +10,10 @@ sqlc:
 test:
 	go test -v -cover ./...
 
+test-it:
+	go test -v -tags=integration ./... 
+
+gotestsum-it:
+	gotestsum --watch -- -v -tags=integration ./... 
+
 .PHONY: migrateup migratedown sqlc test

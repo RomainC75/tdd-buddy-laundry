@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 package repositories
 
 import (
@@ -33,6 +36,7 @@ func TestCustomerRepository(t *testing.T) {
 				WithOccurrence(2).WithStartupTimeout(5*time.Second)),
 	)
 	if err != nil {
+		fmt.Println("-----------> ", err.Error())
 		t.Fatal(err)
 	}
 
@@ -50,30 +54,31 @@ func TestCustomerRepository(t *testing.T) {
 	// assert.NoError(t, err)
 	reservationRepo := NewReservationRepo()
 
+	newUuid := uuid.New()
+	now := time.Now()
+	var reservationTime int32 = 54
+	email := "bob@email.com"
+	pin := "abc1"
+	machineNum := "a10"
+
 	err = reservationRepo.CreateReservation(ctx, models.Reservation{
-		Id:              uuid.New(),
-		ReservationDate: time.Now(),
-		ReservationTime: 45,
-		Email:           "bob",
-		Pin:             "abc1",
-		MachineNum:      "a10",
+		Id:              newUuid,
+		ReservationDate: now,
+		ReservationTime: reservationTime,
+		Email:           email,
+		Pin:             pin,
+		MachineNum:      machineNum,
 	})
-	if err != nil {
-		fmt.Println("-----> create reservation ", err.Error())
-	}
+
 	assert.NoError(t, err)
 	// assert.NotNil(t, c)
 
 	store := db.GetConnection()
 	reservations, err := (*store).ListReservations(ctx)
-	if err != nil {
-		fmt.Println("-----> reservation error : ", err.Error())
-	}
-	fmt.Println("--> reservations : ", reservations)
 
-	// customer, err := customerRepo.GetCustomerByEmail(ctx, "henry@gmail.com")
-	// assert.NoError(t, err)
-	// assert.NotNil(t, customer)
-	// assert.Equal(t, "Henry", customer.Name)
-	// assert.Equal(t, "henry@gmail.com", customer.Email)
+	assert.NoError(t, err)
+	assert.Equal(t, len(reservations), 1)
+	assert.NotNil(t, reservations[0])
+	assert.Equal(t, email, reservations[0].Email)
+	assert.Equal(t, pin, reservations[0].Pin)
 }

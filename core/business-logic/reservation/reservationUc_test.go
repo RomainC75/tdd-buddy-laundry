@@ -29,8 +29,8 @@ func TestReservation(t *testing.T) {
 		fakePinGenerator := providers.NewFakePinGenerator()
 		fakePinGenerator.ExpectedPin = uCase.expectedPin
 		fakeUuidGenerator := providers.NewFakeUuidGenerator()
-		uuid := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
-		fakeUuidGenerator.ExpectedUuid = uuid
+		uuidVar := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
+		fakeUuidGenerator.ExpectedUuid = uuidVar
 
 		reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
 		confirmation, err := reservationUC.ReservationUseCase(uCase.reservationRequest)
@@ -41,7 +41,7 @@ func TestReservation(t *testing.T) {
 			ReservationDate: uCase.reservationRequest.reservationDate,
 			Email:           uCase.reservationRequest.email,
 			Pin:             uCase.expectedPin,
-			Id:              uuid,
+			Id:              uuidVar,
 			// random parameter
 			MachineNum: confirmation.MachineNum,
 		}
@@ -49,7 +49,7 @@ func TestReservation(t *testing.T) {
 		assert.Equal(t, len(fakeReservationRepo.Reservations), 1)
 		assert.Equal(t, fakeReservationRepo.Reservations[0], expectedReservation)
 
-		assert.Equal(t, fakeEmailProvider.Sent, []string{"1"})
+		assert.Equal(t, fakeEmailProvider.Sent, []uuid.UUID{uuidVar})
 	}
 }
 
@@ -59,8 +59,8 @@ func TestRepoError(t *testing.T) {
 	fakeReservationRepo := repositories.NewFakeReservationRepo()
 	fakeReservationRepo.ShouldReturnError = true
 	fakeUuidGenerator := providers.NewFakeUuidGenerator()
-	uuid := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
-	fakeUuidGenerator.ExpectedUuid = uuid
+	uuidVar := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
+	fakeUuidGenerator.ExpectedUuid = uuidVar
 
 	reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
 	reservationRequest := ReservationRequest{
@@ -70,7 +70,7 @@ func TestRepoError(t *testing.T) {
 	}
 	_, err := reservationUC.ReservationUseCase(reservationRequest)
 
-	assert.EqualError(t, err, fmt.Sprintf("error trying to save the reservation : %s", "112"))
+	assert.EqualError(t, err, fmt.Sprintf("error trying to save the reservation : %s", uuidVar))
 }
 
 func TestEmailError(t *testing.T) {
@@ -79,8 +79,8 @@ func TestEmailError(t *testing.T) {
 	fakePinGenerator := providers.NewFakePinGenerator()
 	fakeReservationRepo := repositories.NewFakeReservationRepo()
 	fakeUuidGenerator := providers.NewFakeUuidGenerator()
-	uuid := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
-	fakeUuidGenerator.ExpectedUuid = uuid
+	uuidVar := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
+	fakeUuidGenerator.ExpectedUuid = uuidVar
 
 	reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
 	reservationRequest := ReservationRequest{
@@ -90,5 +90,5 @@ func TestEmailError(t *testing.T) {
 	}
 	_, err := reservationUC.ReservationUseCase(reservationRequest)
 
-	assert.EqualError(t, err, fmt.Sprintf("error trying to send email : %s", "112"))
+	assert.EqualError(t, err, fmt.Sprintf("error trying to send email : %s", uuidVar))
 }
