@@ -1,3 +1,5 @@
+
+
 CREATE TABLE reservation (
     id   uuid PRIMARY KEY,
     reservation_date TIMESTAMP NOT NULL,

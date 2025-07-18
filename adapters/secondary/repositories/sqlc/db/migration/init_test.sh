@@ -5,8 +5,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE USER docker;
     CREATE DATABASE docker;
     GRANT ALL PRIVILEGES ON DATABASE docker TO docker;
-    
-    CREATE TABLE IF NOT EXISTS reservation (
+
+    CREATE TABLE reservation (
         id   uuid PRIMARY KEY,
         reservation_date TIMESTAMP NOT NULL,
         reservation_time INT NOT NULL, 
@@ -17,3 +17,12 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         updated_at TIMESTAMP NOT NULL
     );
 EOSQL
+
+# pwd
+ls
+# for f in /Users/romainchenard/Work/tdd/go-laundry/adapters/secondary/repositories/sqlc/db/migration/*.sql; do
+#   echo "Running $f"
+#   cat $f
+#   echo"----------"
+#   psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" -f "$f"
+# done
