@@ -5,7 +5,7 @@ migratedown:
 	migrate --path db/migration --database "postgresql://name:pass@localhost:5432/securitest?sslmode=disable" --verbose down
 
 sqlc:
-	sqlc generate
+	cd adapters/secondary/repositories/sqlc && sqlc generate && cd -
 
 test:
 	go test -v -cover ./...

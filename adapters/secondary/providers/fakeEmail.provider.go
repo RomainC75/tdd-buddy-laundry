@@ -3,10 +3,12 @@ package providers
 import (
 	"fmt"
 	"laundry/core/business-logic/models"
+
+	"github.com/google/uuid"
 )
 
 type FakeEmailProvider struct {
-	Sent            []string
+	Sent            []uuid.UUID
 	ShouldSendError bool
 }
 
@@ -18,7 +20,7 @@ func (fer *FakeEmailProvider) Send(reservationConfirmation models.Reservation) e
 	if fer.ShouldSendError {
 		return fmt.Errorf("error trying to send email : %s", reservationConfirmation.Id)
 	}
-	fer.Sent = []string{
+	fer.Sent = []uuid.UUID{
 		reservationConfirmation.Id,
 	}
 	return nil

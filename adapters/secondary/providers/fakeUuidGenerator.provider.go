@@ -1,13 +1,15 @@
 package providers
 
+import "github.com/google/uuid"
+
 type FakeUuidGenerator struct {
-	ExpectedUuid string
+	ExpectedUuid uuid.UUID
 }
 
 func NewFakeUuidGenerator() *FakeUuidGenerator {
 	return &FakeUuidGenerator{}
 }
 
-func (fug *FakeUuidGenerator) Generate() string {
+func (fug *FakeUuidGenerator) Generate() uuid.UUID {
 	return fug.ExpectedUuid
 }

@@ -16,7 +16,7 @@ var machines = []string{
 
 type ReservationRequest struct {
 	reservationDate time.Time
-	reservationTime int
+	reservationTime int32
 	email           string
 }
 

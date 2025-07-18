@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -28,7 +29,8 @@ func TestReservation(t *testing.T) {
 		fakePinGenerator := providers.NewFakePinGenerator()
 		fakePinGenerator.ExpectedPin = uCase.expectedPin
 		fakeUuidGenerator := providers.NewFakeUuidGenerator()
-		fakeUuidGenerator.ExpectedUuid = "1"
+		uuid := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
+		fakeUuidGenerator.ExpectedUuid = uuid
 
 		reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
 		confirmation, err := reservationUC.ReservationUseCase(uCase.reservationRequest)
@@ -39,7 +41,7 @@ func TestReservation(t *testing.T) {
 			ReservationDate: uCase.reservationRequest.reservationDate,
 			Email:           uCase.reservationRequest.email,
 			Pin:             uCase.expectedPin,
-			Id:              "1",
+			Id:              uuid,
 			// random parameter
 			MachineNum: confirmation.MachineNum,
 		}
@@ -57,7 +59,8 @@ func TestRepoError(t *testing.T) {
 	fakeReservationRepo := repositories.NewFakeReservationRepo()
 	fakeReservationRepo.ShouldReturnError = true
 	fakeUuidGenerator := providers.NewFakeUuidGenerator()
-	fakeUuidGenerator.ExpectedUuid = "112"
+	uuid := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
+	fakeUuidGenerator.ExpectedUuid = uuid
 
 	reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
 	reservationRequest := ReservationRequest{
@@ -76,7 +79,8 @@ func TestEmailError(t *testing.T) {
 	fakePinGenerator := providers.NewFakePinGenerator()
 	fakeReservationRepo := repositories.NewFakeReservationRepo()
 	fakeUuidGenerator := providers.NewFakeUuidGenerator()
-	fakeUuidGenerator.ExpectedUuid = "112"
+	uuid := uuid.MustParse("dda708b8-b760-45ff-89f5-cadcf14cc656")
+	fakeUuidGenerator.ExpectedUuid = uuid
 
 	reservationUC := NewReservationUC(fakeEmailProvider, fakePinGenerator, fakeReservationRepo, fakeUuidGenerator)
 	reservationRequest := ReservationRequest{
