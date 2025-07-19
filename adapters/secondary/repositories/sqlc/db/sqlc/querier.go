@@ -6,13 +6,11 @@ package db
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 type Querier interface {
 	CreateReservation(ctx context.Context, arg CreateReservationParams) (Reservation, error)
-	GetReservation(ctx context.Context, id uuid.UUID) (Reservation, error)
+	GetReservationByEmail(ctx context.Context, email string) (Reservation, error)
 	ListReservations(ctx context.Context) ([]Reservation, error)
 }
 

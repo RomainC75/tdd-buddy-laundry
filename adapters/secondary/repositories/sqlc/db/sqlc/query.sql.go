@@ -63,12 +63,12 @@ func (q *Queries) CreateReservation(ctx context.Context, arg CreateReservationPa
 	return i, err
 }
 
-const getReservation = `-- name: GetReservation :one
-SELECT id, reservation_date, reservation_time, email, pin, machine_num, created_at, updated_at FROM reservation WHERE id = $1
+const getReservationByEmail = `-- name: GetReservationByEmail :one
+SELECT id, reservation_date, reservation_time, email, pin, machine_num, created_at, updated_at FROM reservation WHERE email = $1
 `
 
-func (q *Queries) GetReservation(ctx context.Context, id uuid.UUID) (Reservation, error) {
-	row := q.db.QueryRowContext(ctx, getReservation, id)
+func (q *Queries) GetReservationByEmail(ctx context.Context, email string) (Reservation, error) {
+	row := q.db.QueryRowContext(ctx, getReservationByEmail, email)
 	var i Reservation
 	err := row.Scan(
 		&i.ID,

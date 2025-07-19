@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"database/sql"
 	"path/filepath"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 type PostgresContainer struct {
 	*postgres.PostgresContainer
 	ConnectionString string
+	Sql              *sql.DB
 }
 
 func CreatePostgresContainer(ctx context.Context) (*PostgresContainer, error) {
@@ -38,8 +40,14 @@ func CreatePostgresContainer(ctx context.Context) (*PostgresContainer, error) {
 		return nil, err
 	}
 
+	sql, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, err
+	}
+
 	return &PostgresContainer{
 		PostgresContainer: pgContainer,
 		ConnectionString:  connStr,
+		Sql:               sql,
 	}, nil
 }

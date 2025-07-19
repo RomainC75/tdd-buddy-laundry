@@ -1,5 +1,5 @@
--- name: GetReservation :one
-SELECT * FROM reservation WHERE id = $1;
+-- name: GetReservationByEmail :one
+SELECT * FROM reservation WHERE email = $1;
 
 -- name: ListReservations :many
 SELECT * FROM reservation ORDER BY reservation_date;

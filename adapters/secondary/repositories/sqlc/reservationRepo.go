@@ -2,10 +2,10 @@ package repositories
 
 import (
 	"context"
+	"time"
+
 	db "laundry/adapters/secondary/repositories/sqlc/db/sqlc"
 	"laundry/core/business-logic/models"
-
-	"time"
 	// db "laundry/adapter/secondary/repositories/db"
 )
 
@@ -36,10 +36,10 @@ func (reservationRepo *ReservationRepository) CreateReservation(ctx context.Cont
 	return err
 }
 
-// func (userRepo *ReservationRepository) FindUserByEmail(ctx context.Context, email string) (db.User, error) {
-// 	foundUser, err := (*userRepo.Store).GetUserByEmail(ctx, email)
-// 	if err != nil {
-// 		return db.User{}, err
-// 	}
-// 	return foundUser, nil
-// }
+func (reservationRepo *ReservationRepository) FindReservationByEmail(ctx context.Context, email string) (models.Reservation, error) {
+	foundResa, err := (*reservationRepo.Store).GetReservationByEmail(ctx, email)
+	if err != nil {
+		return models.Reservation{}, err
+	}
+	return models.ReservationFromSnapshot(foundResa.ID, foundResa.ReservationDate, foundResa.ReservationTime, foundResa.Email, foundResa.Pin, foundResa.MachineNum), nil
+}

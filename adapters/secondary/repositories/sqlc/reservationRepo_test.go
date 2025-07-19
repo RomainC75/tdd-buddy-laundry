@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -81,6 +82,19 @@ func (suite *RepoTestSuite) TestCustomerRepository() {
 	assert.NotNil(suite.T(), reservations[0])
 	assert.Equal(suite.T(), email, reservations[0].Email)
 	assert.Equal(suite.T(), pin, reservations[0].Pin)
+}
+
+func (suite *RepoTestSuite) TestCustomerRepositoryRead() {
+	err := test.RunSQLFile(suite.pgContainer.Sql, filepath.Join("db", "migration", "tests", "init_for_read.sql"))
+	if err != nil {
+		fmt.Println("------->", err.Error())
+	}
+	assert.NoError(suite.T(), err)
+	reservationRepo := NewReservationRepo()
+	foundReservation, err := reservationRepo.FindReservationByEmail(suite.ctx, "bob1@email.com")
+
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), foundReservation.Email, "bob1@email.com")
 }
 
 // !run the tests
