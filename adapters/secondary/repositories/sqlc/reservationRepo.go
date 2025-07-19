@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 	"time"
 
 	db "laundry/adapters/secondary/repositories/sqlc/db/sqlc"
@@ -38,8 +40,12 @@ func (reservationRepo *ReservationRepository) CreateReservation(ctx context.Cont
 
 func (reservationRepo *ReservationRepository) FindReservationByEmail(ctx context.Context, email string) (models.Reservation, error) {
 	foundResa, err := (*reservationRepo.Store).GetReservationByEmail(ctx, email)
+	if err != nil && err == sql.ErrNoRows {
+		return models.Reservation{}, fmt.Errorf("no reservation found for email : %s", email)
+	}
 	if err != nil {
 		return models.Reservation{}, err
 	}
+
 	return models.ReservationFromSnapshot(foundResa.ID, foundResa.ReservationDate, foundResa.ReservationTime, foundResa.Email, foundResa.Pin, foundResa.MachineNum), nil
 }

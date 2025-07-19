@@ -85,16 +85,26 @@ func (suite *RepoTestSuite) TestCustomerRepository() {
 }
 
 func (suite *RepoTestSuite) TestCustomerRepositoryRead() {
-	err := test.RunSQLFile(suite.pgContainer.Sql, filepath.Join("db", "migration", "tests", "init_for_read.sql"))
-	if err != nil {
-		fmt.Println("------->", err.Error())
-	}
-	assert.NoError(suite.T(), err)
-	reservationRepo := NewReservationRepo()
-	foundReservation, err := reservationRepo.FindReservationByEmail(suite.ctx, "bob1@email.com")
+	suite.T().Run("should return the data found", func(t *testing.T) {
+		err := test.RunSQLFile(suite.pgContainer.Sql, filepath.Join("db", "migration", "tests", "init_for_read.sql"))
+		assert.NoError(suite.T(), err)
 
-	assert.NoError(suite.T(), err)
-	assert.Equal(suite.T(), foundReservation.Email, "bob1@email.com")
+		email := "bob1@email.com"
+		reservationRepo := NewReservationRepo()
+		foundReservation, err := reservationRepo.FindReservationByEmail(suite.ctx, email)
+
+		assert.NoError(suite.T(), err)
+		assert.Equal(suite.T(), "bob1@email.com", foundReservation.Email)
+	})
+	suite.T().Run("should return an error if no reservation has been found", func(t *testing.T) {
+		reservationRepo := NewReservationRepo()
+		email := "xxxxxx@email.com"
+		_, err := reservationRepo.FindReservationByEmail(suite.ctx, "xxxxxx@email.com")
+
+		// assert.NoError(suite.T(), err)
+
+		assert.EqualError(suite.T(), err, fmt.Sprintf("no reservation found for email : %s", email))
+	})
 }
 
 // !run the tests
