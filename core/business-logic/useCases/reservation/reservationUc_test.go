@@ -101,6 +101,6 @@ func (suite *ReservationUcTestSuite) TestReservation() {
 	})
 }
 
-func TestExampleTestSuite(t *testing.T) {
+func TestSuite(t *testing.T) {
 	suite.Run(t, new(ReservationUcTestSuite))
 }
