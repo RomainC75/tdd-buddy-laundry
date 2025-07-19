@@ -45,14 +45,6 @@ func (suite *RepoTestSuite) TearDownSuite() {
 }
 
 func (suite *RepoTestSuite) TestCustomerRepository() {
-	// t.Cleanup(func() {
-	// 	if err := suite.pgContainer.Terminate(ctx); err != nil {
-	// 		t.Fatalf("failed to terminate pgContainer: %s", err)
-	// 	}
-	// })
-
-	// customerRepo, err := NewRepository(ctx, connStr)
-	// assert.NoError(t, err)
 	reservationRepo := NewReservationRepo()
 
 	newUuid := uuid.New()
@@ -70,9 +62,7 @@ func (suite *RepoTestSuite) TestCustomerRepository() {
 		Pin:             pin,
 		MachineNum:      machineNum,
 	})
-
 	assert.NoError(suite.T(), err)
-	// assert.NotNil(suite.T(), c)
 
 	store := db.GetConnection()
 	reservations, err := (*store).ListReservations(suite.ctx)
@@ -100,8 +90,6 @@ func (suite *RepoTestSuite) TestCustomerRepositoryRead() {
 		reservationRepo := NewReservationRepo()
 		email := "xxxxxx@email.com"
 		_, err := reservationRepo.FindReservationByEmail(suite.ctx, "xxxxxx@email.com")
-
-		// assert.NoError(suite.T(), err)
 
 		assert.EqualError(suite.T(), err, fmt.Sprintf("no reservation found for email : %s", email))
 	})
